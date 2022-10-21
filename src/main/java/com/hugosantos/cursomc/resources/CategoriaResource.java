@@ -1,23 +1,30 @@
 package com.hugosantos.cursomc.resources;
 
-import java.util.ArrayList;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hugosantos.cursomc.domain.Categoria;
+import com.hugosantos.cursomc.services.CategoriaService;
 
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaResource{
+    @Autowired
+    private CategoriaService service;
     
-    @RequestMapping(method = RequestMethod.GET)
-    public ArrayList<Categoria> getCategorias(){
-        ArrayList<Categoria> categorias = new ArrayList<Categoria>();
-        categorias.add(new Categoria(1, "Informática"));
-        categorias.add(new Categoria(2, "Escritório"));
+    /**
+     * Busca uma categoria pelo ID
+     * @param id : id da categoria a ser buscada 
+     * @return 
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getCategoria(@PathVariable Integer id){
+        Categoria categoria = service.buscarCategoriaPeloId(id);
         
-        return categorias;
+        return ResponseEntity.ok().body(categoria);
     }
 }
