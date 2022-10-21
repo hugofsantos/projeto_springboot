@@ -2,6 +2,7 @@ package com.hugosantos.cursomc.services;
 
 import java.util.Optional;
 
+import com.hugosantos.cursomc.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public class CategoriaService {
     public Categoria buscarCategoriaPeloId(Integer id){
         Optional<Categoria> categoria = repository.findById(id);
 
-        return categoria.orElse(null);
+        return categoria.orElseThrow(() -> {
+            throw new ObjectNotFoundException(String.format("Nenhum objeto com o id %d foi encontrado!", id));
+        });
     }
 }
