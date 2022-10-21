@@ -1,12 +1,15 @@
 package com.hugosantos.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Categoria implements Serializable{
@@ -18,13 +21,17 @@ public class Categoria implements Serializable{
     
     private String nome;
 
-    public Categoria(){
+    @ManyToMany(mappedBy = "categorias")
+    private List<Produto> produtos;
 
+    public Categoria(){
+        this.produtos = new ArrayList<Produto>();
     }
 
     public Categoria(Integer id, String nome){
         this.id = id;
         this.nome = nome;
+        this.produtos = new ArrayList<Produto>();
     }
 
     public Integer getId() {
@@ -41,6 +48,19 @@ public class Categoria implements Serializable{
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+    public List<Produto> getProdutos() {
+        ArrayList<Produto> copiaProdutos = new ArrayList<Produto>();
+        copiaProdutos.addAll(this.produtos);
+
+        return copiaProdutos;
+    } 
+    public void adicionarProduto(Produto produto){
+        if(produto != null && !this.produtos.contains(produto)) this.produtos.add(produto);
+    }
+
+    public void adicionarProdutos(List<Produto> produtos){
+        this.produtos.addAll(produtos);
     }
 
     @Override
@@ -63,5 +83,9 @@ public class Categoria implements Serializable{
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 }
